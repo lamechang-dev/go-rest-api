@@ -12,22 +12,22 @@ type IUserController interface {
 	Logout(c echo.Context)	error
 }
 
-type UserController struct {
+type userController struct {
 	uu usecase.IUserUsecase
 }
 
 func NewUserController(uu usecase.IUserUsecase) IUserController {
-	return &UserController{uu}
+	return &userController{uu}
 }
 
-func (uc *UserController) SignUp(c echo.Context) error {
+func (uc *userController) SignUp(c echo.Context) error {
 	return nil
 }
 
-func (uc *UserController) Login(c echo.Context) error {
+func (uc *userController) Login(c echo.Context) error {
 	return nil
 }
 
-func (uc *UserController) Logout(c echo.Context) error {
+func (uc *userController) Logout(c echo.Context) error {
 	return nil
 }
