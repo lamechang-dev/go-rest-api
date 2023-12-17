@@ -39,3 +39,32 @@ func (tu *taskUseCase) GetAllTasks(userId int) ([]model.TaskResponse, error) {
 	}
 	return resTasks, nil
 }
+
+func (tu *taskUseCase) GetTaskById(userId int, taskId int) (model.TaskResponse, error) {
+	task := model.Task{}
+	err := tu.tr.GetTaskById(&task, userId, taskId)
+	if err != nil {
+		return model.TaskResponse{}, err
+	}
+	resTask := model.TaskResponse{
+		ID: task.ID,
+		Title: task.Title,
+		CreatedAt: task.CreatedAt,
+		UpdatedAt: task.UpdatedAt,
+	}
+	return resTask, nil
+}
+
+func (tu *taskUseCase) CreateTask(task model.Task) (model.TaskResponse, error) {
+	err := tu.tr.CreateTask(&task)
+	if err != nil {
+		return model.TaskResponse{}, err
+	}
+	resTask := model.TaskResponse{
+		ID: task.ID,
+		Title: task.Title,
+		CreatedAt: task.CreatedAt,
+		UpdatedAt: task.UpdatedAt,
+	}
+	return resTask, nil
+}
