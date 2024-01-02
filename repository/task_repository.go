@@ -13,7 +13,7 @@ type ITaskRepository interface {
 	GetTaskById(task *model.Task, userId int, taskId int) error
 	CreateTask(task *model.Task) error
 	UpdateTask(task *model.Task, userId int, taskId int) error
-	DeleteTask(task *model.Task, taskId int) error
+	DeleteTask(userId uint, taskId uint) error
 }
 
 type taskRepository struct {
@@ -60,9 +60,13 @@ func (tr *taskRepository) UpdateTask(task *model.Task, userId int, taskId int) e
 	
 }
 
-func (tr *taskRepository) DeleteTask(task *model.Task, taskId int) error {
-	if err := tr.db.Where("id=?", taskId).Delete(task).Error; err != nil {
-		return err
+func (tr *taskRepository) DeleteTask(userId uint, taskId uint) error {
+	result := tr.db.Where("id=? AND user_id=?", taskId, userId).Delete(&model.Task{})
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected < 1 {
+		return fmt.Errorf("object does not exist")
 	}
 	return nil
 }

@@ -5,19 +5,19 @@ import (
 	"go-rest-api/repository"
 )
 
-type ITaskUseCase interface {
+type ITaskUsecase interface {
 	GetAllTasks(userId int) ([]model.TaskResponse, error)
 	GetTaskById(userId int, taskId int) (model.TaskResponse, error)
 	CreateTask(task model.Task) (model.TaskResponse, error)
 	UpdateTask(task model.Task, userId int, taskId int) (model.TaskResponse, error)
-	DeleteTask(userId int, taskId int) error
+	DeleteTask(userId uint, taskId uint) error
 }
 
 type taskUseCase struct {
 	tr repository.ITaskRepository
 }
 
-func NewTaskUseCase(tr repository.ITaskRepository) ITaskUseCase {
+func NewTaskUsecase(tr repository.ITaskRepository) ITaskUsecase {
 	return &taskUseCase{tr}
 }
 
@@ -67,4 +67,26 @@ func (tu *taskUseCase) CreateTask(task model.Task) (model.TaskResponse, error) {
 		UpdatedAt: task.UpdatedAt,
 	}
 	return resTask, nil
+}
+
+func (tu *taskUseCase) UpdateTask(task model.Task, userId int, taskId int) (model.TaskResponse, error) {
+	err := tu.tr.UpdateTask(&task, userId, taskId)
+	if err != nil {
+		return model.TaskResponse{}, err
+	}
+	resTask := model.TaskResponse{
+		ID: task.ID,
+		Title: task.Title,
+		CreatedAt: task.CreatedAt,
+		UpdatedAt: task.UpdatedAt,
+	}
+	return resTask, nil
+}
+
+func (tu *taskUseCase) DeleteTask(userId uint, taskId uint) error {
+	err := tu.tr.DeleteTask(userId, taskId)
+	if err != nil {
+		return err
+	}
+	return nil
 }
